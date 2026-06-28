@@ -1,0 +1,8 @@
+# Supabase local stack / secrets
+supabase/.branches
+supabase/.temp
+.env
+.env.local
+*.log
+
+# Never commit secrets — service-role key, db password, etc.

@@ -1,0 +1,144 @@
+import NetInfo from "@react-native-community/netinfo";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { AppState } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import {
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold
+} from "@expo-google-fonts/plus-jakarta-sans";
+import type { PropsWithChildren } from "react";
+import { useEffect } from "react";
+import { TamaguiProvider, Theme } from "tamagui";
+
+import { USE_BACKEND } from "@/lib/config/backend-flag";
+import { getSession, onAuthStateChange } from "@/services/auth.service";
+import { queryClient } from "@/services/query/query-client";
+import { registerQueryOnlineManager } from "@/services/network/register-online-manager";
+import { subscribeToUserData } from "@/services/realtime.service";
+import { supabase } from "@/services/supabase-client";
+import { flushOutbox } from "@/services/sync/mutation-queue";
+import { useCollectionsStore } from "@/store/use-collections-store";
+import { useNotificationsStore } from "@/store/use-notifications-store";
+import { useSavedItemsStore } from "@/store/use-saved-items-store";
+import { useSessionStore } from "@/store/use-session-store";
+import { useSyncStore } from "@/store/use-sync-store";
+import { tamaguiConfig } from "@/theme";
+
+void SplashScreen.preventAutoHideAsync();
+
+export function AppProviders({ children }: PropsWithChildren) {
+  const themeName = "light";
+  const userId = useSessionStore((state) => state.userId);
+  const [fontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold
+  });
+
+  useEffect(() => {
+    registerQueryOnlineManager();
+  }, []);
+
+  // Keep the JWT fresh. RN needs AppState wiring for autoRefreshToken to run —
+  // without it the token expires, auth.uid() goes null and RLS denies (42501).
+  useEffect(() => {
+    if (!USE_BACKEND) {
+      return;
+    }
+    if (AppState.currentState === "active") {
+      supabase.auth.startAutoRefresh();
+    }
+    const sub = AppState.addEventListener("change", (state) => {
+      if (state === "active") {
+        supabase.auth.startAutoRefresh();
+      } else {
+        supabase.auth.stopAutoRefresh();
+      }
+    });
+    return () => sub.remove();
+  }, []);
+
+  // Restore + track the auth session (backend only).
+  useEffect(() => {
+    if (!USE_BACKEND) {
+      return;
+    }
+    const setSession = useSessionStore.getState().setSession;
+    void getSession()
+      .then(({ data }) => setSession(data.session))
+      .finally(() => useSessionStore.getState().markBootstrapped());
+    const { data } = onAuthStateChange((session) => setSession(session));
+    return () => data.subscription.unsubscribe();
+  }, []);
+
+  // Replay offline writes: once on startup, then whenever the network returns.
+  useEffect(() => {
+    if (!USE_BACKEND) {
+      return;
+    }
+    void useSyncStore.getState().refreshPending();
+    void flushOutbox();
+    let wasConnected = true;
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      const connected = state.isConnected ?? false;
+      if (connected && !wasConnected) {
+        void flushOutbox();
+      }
+      wasConnected = connected;
+    });
+    return unsubscribe;
+  }, []);
+
+  // Live updates: resubscribe whenever the signed-in user changes. Any change to
+  // the user's data reloads the affected store (cross-device + post-flush sync).
+  useEffect(() => {
+    if (!USE_BACKEND || !userId) {
+      return;
+    }
+    let unsubscribe: (() => void) | null = null;
+    let cancelled = false;
+    void subscribeToUserData({
+      onItemsChanged: () => void useSavedItemsStore.getState().loadItems(),
+      onCollectionsChanged: () => void useCollectionsStore.getState().loadCollections(),
+      onNotificationsChanged: () => void useNotificationsStore.getState().loadNotifications()
+    })
+      .then((fn) => {
+        if (cancelled) {
+          fn();
+        } else {
+          unsubscribe = fn;
+        }
+      })
+      .catch((error: unknown) => console.warn("[realtime] subscribe failed", error));
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
+  }, [userId]);
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      void SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  return (
+    <TamaguiProvider config={tamaguiConfig} defaultTheme={themeName}>
+      <Theme name={themeName}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+          <StatusBar style="dark" />
+        </QueryClientProvider>
+      </Theme>
+    </TamaguiProvider>
+  );
+}

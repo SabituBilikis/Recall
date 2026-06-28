@@ -1,0 +1,17 @@
+{
+  "name": "recall-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Recall backend — Supabase (Postgres, Auth, Storage, Edge Functions). Independent of the app; the frontend talks to it only over HTTPS.",
+  "scripts": {
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:push": "supabase db push",
+    "db:diff": "supabase db diff",
+    "gen:types": "supabase gen types typescript --local > ../src/services/generated/database.types.ts",
+    "fn:serve": "supabase functions serve",
+    "fn:deploy": "supabase functions deploy",
+    "link": "supabase link"
+  }
+}
