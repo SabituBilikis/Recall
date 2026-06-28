@@ -12,6 +12,7 @@
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
     "doctor": "expo-doctor",
+    "postinstall": "patch-package",
     "storybook:ios": "cross-env STORYBOOK_ENABLED=true expo start --ios",
     "storybook:android": "cross-env STORYBOOK_ENABLED=true expo start --android"
   },
@@ -74,6 +75,8 @@
     "eslint": "^9.39.4",
     "eslint-config-expo": "^56.0.4",
     "expo-doctor": "^1.19.7",
+    "patch-package": "^8.0.1",
+    "postinstall-postinstall": "^2.1.0",
     "storybook": "^10.4.0",
     "typescript": "~6.0.3"
   }
