@@ -46,7 +46,7 @@ export function useChangeAvatar() {
     } catch (err) {
       const detail = err instanceof Error ? err.message : String(err);
       console.warn("[avatar] change failed", detail);
-      setError(__DEV__ ? `${profileContent.avatar.failed} (${detail})` : profileContent.avatar.failed);
+      setError(`${profileContent.avatar.failed} (${detail})`);
     } finally {
       setUploading(false);
     }

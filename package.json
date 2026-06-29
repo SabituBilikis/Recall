@@ -77,6 +77,7 @@
     "expo-doctor": "^1.19.7",
     "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
+    "sharp": "^0.35.2",
     "storybook": "^10.4.0",
     "typescript": "~6.0.3"
   }

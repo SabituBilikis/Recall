@@ -7,12 +7,17 @@ values (
   'avatars',
   'avatars',
   true,
-  5242880, -- 5 MiB
-  array['image/png','image/jpeg','image/webp']
+  20971520, -- 20 MiB
+  null -- accept any image type; the picker only yields images and paths are owner-namespaced
 )
 on conflict (id) do nothing;
 
--- The first path segment must equal the user's id (writes only; reads are public).
+-- The first path segment must equal the user's id. Owner SELECT lets the client's
+-- upsert read existing object metadata; public read is served separately.
+create policy "avatars_select_own" on storage.objects
+  for select using (
+    bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text
+  );
 create policy "avatars_insert_own" on storage.objects
   for insert with check (
     bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text

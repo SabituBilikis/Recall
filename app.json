@@ -5,7 +5,7 @@
     "scheme": "recall",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/recall-logo-mark.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "experiments": {
       "typedRoutes": true
@@ -18,7 +18,7 @@
       "package": "com.recall.app",
       "adaptiveIcon": {
         "backgroundColor": "#F3F1FF",
-        "foregroundImage": "./assets/recall-logo-mark.png"
+        "foregroundImage": "./assets/adaptive-foreground.png"
       },
       "predictiveBackGestureEnabled": true
     },
