@@ -12,7 +12,12 @@
       "distribution": "internal",
       "channel": "preview",
       "android": { "buildType": "apk" },
-      "ios": { "simulator": true }
+      "ios": { "simulator": true },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://mqmrgdrltqzuuhsbtdza.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_z1IxYbYHt3U5N_ouDVs11w_J3Canke2",
+        "EXPO_PUBLIC_USE_BACKEND": "true"
+      }
     },
     "production": {
       "channel": "production",
