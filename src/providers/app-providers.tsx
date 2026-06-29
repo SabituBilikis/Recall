@@ -17,7 +17,7 @@ import { useEffect } from "react";
 import { TamaguiProvider, Theme } from "tamagui";
 
 import { USE_BACKEND } from "@/lib/config/backend-flag";
-import { getSession, handleAuthDeepLink, onAuthStateChange } from "@/services/auth.service";
+import { getSession, handleAuthDeepLink, isAuthDeepLink, onAuthStateChange } from "@/services/auth.service";
 import { queryClient } from "@/services/query/query-client";
 import { registerQueryOnlineManager } from "@/services/network/register-online-manager";
 import { subscribeToUserData } from "@/services/realtime.service";
@@ -86,13 +86,12 @@ export function AppProviders({ children }: PropsWithChildren) {
       return;
     }
     const onUrl = (url: string | null) => {
-      if (!url) {
+      if (!url || !isAuthDeepLink(url)) {
         return;
       }
       void handleAuthDeepLink(url).then((result) => {
-        if (result.ok) {
-          router.replace("/email-confirmed");
-        }
+        // Always route off the (possibly blank) launch screen for an auth link.
+        router.replace(result.ok ? "/email-confirmed" : "/login");
       });
     };
     void Linking.getInitialURL().then(onUrl);

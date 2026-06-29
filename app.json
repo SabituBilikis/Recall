@@ -5,7 +5,7 @@
     "scheme": "recall",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/recall-logo-mark.png",
     "userInterfaceStyle": "automatic",
     "experiments": {
       "typedRoutes": true
@@ -17,10 +17,8 @@
     "android": {
       "package": "com.recall.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#F3F1FF",
+        "foregroundImage": "./assets/recall-logo-mark.png"
       },
       "predictiveBackGestureEnabled": true
     },
@@ -35,10 +33,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/splash-icon.png",
+          "image": "./assets/recall-logo-mark.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#F8F7FF"
+          "backgroundColor": "#F3F1FF"
         }
       ],
       "expo-web-browser",

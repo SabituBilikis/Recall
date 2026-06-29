@@ -79,11 +79,8 @@ export function resendConfirmation(email: string) {
 
 type EmailOtpType = "signup" | "email" | "magiclink" | "recovery" | "invite" | "email_change";
 
-// Handle an incoming auth deep link (recall://...) from a confirmation / magic
-// link. Reads params from both the query and the hash, then completes auth via
-// whichever the link carries. Returns ok=false (no-op) when the URL has no auth
-// params, so it's safe to call for every incoming link.
-export async function handleAuthDeepLink(url: string): Promise<{ ok: boolean; isSignup: boolean }> {
+// Read auth params from both the query string and the hash fragment of a link.
+function parseAuthParams(url: string): Map<string, string> {
   const params = new Map<string, string>();
   const collect = (segment?: string) => {
     if (!segment) {
@@ -101,7 +98,22 @@ export async function handleAuthDeepLink(url: string): Promise<{ ok: boolean; is
   if (hashIndex >= 0) {
     collect(url.slice(hashIndex + 1));
   }
+  return params;
+}
 
+// True when a link carries something we can complete auth with (confirmation /
+// magic link / OAuth code). Lets callers branch before doing the async work.
+export function isAuthDeepLink(url: string): boolean {
+  const params = parseAuthParams(url);
+  return params.has("token_hash") || params.has("code") || params.has("access_token");
+}
+
+// Handle an incoming auth deep link (recall://...) from a confirmation / magic
+// link. Completes auth via whichever credential the link carries. Returns
+// ok=false (no-op) when the URL has no auth params, so it's safe to call for
+// every incoming link.
+export async function handleAuthDeepLink(url: string): Promise<{ ok: boolean; isSignup: boolean }> {
+  const params = parseAuthParams(url);
   const type = params.get("type") ?? "";
   const isSignup = type === "signup" || type === "email" || type === "magiclink";
 
