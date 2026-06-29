@@ -16,10 +16,11 @@ export type SignupScreenProps = {
   onBack: () => void;
   onSignInPress: () => void;
   onSubmitSuccess: () => void;
+  onConfirmEmail: (email: string) => void;
   onTermsPress: () => void;
 };
 
-export function SignupScreen({ onBack, onSignInPress, onSubmitSuccess, onTermsPress }: SignupScreenProps) {
+export function SignupScreen({ onBack, onSignInPress, onSubmitSuccess, onConfirmEmail, onTermsPress }: SignupScreenProps) {
   const insets = useSafeAreaInsets();
   const google = useGoogleSignIn(onSubmitSuccess);
 
@@ -48,7 +49,7 @@ export function SignupScreen({ onBack, onSignInPress, onSubmitSuccess, onTermsPr
           ) : null}
           <AuthDivider />
 
-          <SignupForm onSubmitSuccess={onSubmitSuccess} onTermsPress={onTermsPress} />
+          <SignupForm onConfirmEmail={onConfirmEmail} onSubmitSuccess={onSubmitSuccess} onTermsPress={onTermsPress} />
 
           <AuthFooter linkLabel={signupContent.footerLink} prompt={signupContent.footerPrompt} onLinkPress={onSignInPress} />
         </YStack>

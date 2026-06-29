@@ -12,7 +12,9 @@ const AUTH_SEGMENTS = new Set([
   "login",
   "signup",
   "forgot-password",
-  "set-new-password"
+  "set-new-password",
+  "confirm-email",
+  "email-confirmed"
 ]);
 
 // Redirects a signed-out user off any gated screen (e.g. a deep link to

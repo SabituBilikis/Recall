@@ -1,6 +1,8 @@
 import NetInfo from "@react-native-community/netinfo";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { AppState } from "react-native";
+import * as Linking from "expo-linking";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -15,7 +17,7 @@ import { useEffect } from "react";
 import { TamaguiProvider, Theme } from "tamagui";
 
 import { USE_BACKEND } from "@/lib/config/backend-flag";
-import { getSession, onAuthStateChange } from "@/services/auth.service";
+import { getSession, handleAuthDeepLink, onAuthStateChange } from "@/services/auth.service";
 import { queryClient } from "@/services/query/query-client";
 import { registerQueryOnlineManager } from "@/services/network/register-online-manager";
 import { subscribeToUserData } from "@/services/realtime.service";
@@ -74,6 +76,28 @@ export function AppProviders({ children }: PropsWithChildren) {
       .finally(() => useSessionStore.getState().markBootstrapped());
     const { data } = onAuthStateChange((session) => setSession(session));
     return () => data.subscription.unsubscribe();
+  }, []);
+
+  // Email-confirmation / magic-link deep links: completing auth from the link
+  // (the onAuthStateChange listener above picks up the new session), then show
+  // the confirmed screen.
+  useEffect(() => {
+    if (!USE_BACKEND) {
+      return;
+    }
+    const onUrl = (url: string | null) => {
+      if (!url) {
+        return;
+      }
+      void handleAuthDeepLink(url).then((result) => {
+        if (result.ok) {
+          router.replace("/email-confirmed");
+        }
+      });
+    };
+    void Linking.getInitialURL().then(onUrl);
+    const sub = Linking.addEventListener("url", (event) => onUrl(event.url));
+    return () => sub.remove();
   }, []);
 
   // Replay offline writes: once on startup, then whenever the network returns.

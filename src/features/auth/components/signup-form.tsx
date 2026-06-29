@@ -14,10 +14,11 @@ import { TermsText } from "./terms-text";
 
 type SignupFormProps = {
   onSubmitSuccess: () => void;
+  onConfirmEmail: (email: string) => void;
   onTermsPress: () => void;
 };
 
-export function SignupForm({ onSubmitSuccess, onTermsPress }: SignupFormProps) {
+export function SignupForm({ onSubmitSuccess, onConfirmEmail, onTermsPress }: SignupFormProps) {
   const {
     values,
     showPassword,
@@ -29,7 +30,7 @@ export function SignupForm({ onSubmitSuccess, onTermsPress }: SignupFormProps) {
     toggleShowPassword,
     handleEmailBlur,
     handleSubmit
-  } = useSignupForm({ onSuccess: onSubmitSuccess });
+  } = useSignupForm({ onSuccess: onSubmitSuccess, onConfirmEmail });
 
   const [passwordFocused, setPasswordFocused] = useState(false);
   const showRequirements = passwordFocused || values.password.length > 0;

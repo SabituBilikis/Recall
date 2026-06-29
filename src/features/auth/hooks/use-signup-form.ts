@@ -14,11 +14,13 @@ const MOCK_SUBMIT_DELAY = 1200;
 const initialValues: SignupFormValues = { firstName: "", lastName: "", email: "", password: "" };
 
 type UseSignupFormParams = {
-  // Navigation placeholder — the single seam where real auth plugs in later.
+  // Session created immediately (email confirmations OFF) → into the app.
   onSuccess?: () => void;
+  // No session yet (email confirmations ON) → go confirm the email first.
+  onConfirmEmail?: (email: string) => void;
 };
 
-export function useSignupForm({ onSuccess }: UseSignupFormParams = {}) {
+export function useSignupForm({ onSuccess, onConfirmEmail }: UseSignupFormParams = {}) {
   const [values, setValues] = useState<SignupFormValues>(initialValues);
   const [showPassword, setShowPassword] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
@@ -87,6 +89,11 @@ export function useSignupForm({ onSuccess }: UseSignupFormParams = {}) {
         setIsLoading(false);
         if (error) {
           setSubmitError(authErrorMessage(error));
+          return;
+        }
+        // Confirmations ON → no session yet; send the user to confirm their email.
+        if (!data.session) {
+          onConfirmEmail?.(values.email.trim());
           return;
         }
         setSession(data.session);

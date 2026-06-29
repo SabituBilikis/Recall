@@ -72,6 +72,62 @@ export function signOut() {
   return supabase.auth.signOut();
 }
 
+// Re-send the signup confirmation email.
+export function resendConfirmation(email: string) {
+  return supabase.auth.resend({ type: "signup", email });
+}
+
+type EmailOtpType = "signup" | "email" | "magiclink" | "recovery" | "invite" | "email_change";
+
+// Handle an incoming auth deep link (recall://...) from a confirmation / magic
+// link. Reads params from both the query and the hash, then completes auth via
+// whichever the link carries. Returns ok=false (no-op) when the URL has no auth
+// params, so it's safe to call for every incoming link.
+export async function handleAuthDeepLink(url: string): Promise<{ ok: boolean; isSignup: boolean }> {
+  const params = new Map<string, string>();
+  const collect = (segment?: string) => {
+    if (!segment) {
+      return;
+    }
+    for (const [key, value] of new URLSearchParams(segment)) {
+      params.set(key, value);
+    }
+  };
+  const hashIndex = url.indexOf("#");
+  const queryIndex = url.indexOf("?");
+  if (queryIndex >= 0) {
+    collect(url.slice(queryIndex + 1, hashIndex >= 0 ? hashIndex : undefined));
+  }
+  if (hashIndex >= 0) {
+    collect(url.slice(hashIndex + 1));
+  }
+
+  const type = params.get("type") ?? "";
+  const isSignup = type === "signup" || type === "email" || type === "magiclink";
+
+  try {
+    const tokenHash = params.get("token_hash");
+    if (tokenHash && type) {
+      const { error } = await supabase.auth.verifyOtp({ type: type as EmailOtpType, token_hash: tokenHash });
+      return { ok: !error, isSignup };
+    }
+    const code = params.get("code");
+    if (code) {
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      return { ok: !error, isSignup };
+    }
+    const accessToken = params.get("access_token");
+    const refreshToken = params.get("refresh_token");
+    if (accessToken && refreshToken) {
+      const { error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+      return { ok: !error, isSignup };
+    }
+  } catch {
+    return { ok: false, isSignup };
+  }
+  return { ok: false, isSignup };
+}
+
 export function onAuthStateChange(handler: (session: Session | null) => void) {
   return supabase.auth.onAuthStateChange((_event, session) => handler(session));
 }

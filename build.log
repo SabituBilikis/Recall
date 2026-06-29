@@ -1014,3 +1014,6 @@ Code: CodedError.ts
  [90m 14 |[39m }[0m
 Call Stack
   constructor (node_modules\expo-modules-core\src\errors\CodedError.ts:11:10)
+› Detected a change in metro.config.js. Restart the server to see the new results.
+› Detected a change in babel.config.js. Restart the server to see the new results. You may need to clear the bundler cache with the --clear flag for your changes to take effect.
+› Detected a change in babel.config.js. Restart the server to see the new results. You may need to clear the bundler cache with the --clear flag for your changes to take effect.

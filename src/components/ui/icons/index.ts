@@ -15,6 +15,7 @@ export { GoogleIcon } from "./google-icon";
 export { HomeIcon } from "./home-icon";
 export { HomeOutlineIcon } from "./home-outline-icon";
 export { LinkIcon } from "./link-icon";
+export { MailIcon } from "./mail-icon";
 export { MoreIcon } from "./more-icon";
 export { NoteIcon } from "./note-icon";
 export { PlusIcon } from "./plus-icon";
