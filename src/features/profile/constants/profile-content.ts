@@ -5,7 +5,8 @@ export const profileContent = {
     profile: "Profile",
     account: "Account",
     storage: "Storage",
-    trash: "Trash"
+    trash: "Trash",
+    privacy: "Privacy"
   },
   stats: {
     storageUsed: "Storage used",
