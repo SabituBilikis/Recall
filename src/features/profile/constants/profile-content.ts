@@ -22,6 +22,10 @@ export const profileContent = {
     offline: { label: "Offline Mode", description: "Cache items for no-signal access" },
     notifications: { label: "Notification", description: "Nudges to capture & revisit" }
   },
+  avatar: {
+    permission: "Photo access is needed to set a profile picture. Enable it in Settings.",
+    failed: "Couldn't update your photo. Please try again."
+  },
   signOut: {
     cta: "Sign Out",
     modalTitle: "Sign out?",

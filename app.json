@@ -40,7 +40,13 @@
         }
       ],
       "expo-web-browser",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Recall to access your photos to set your profile picture."
+        }
+      ]
     ],
     "extra": {
       "router": {},

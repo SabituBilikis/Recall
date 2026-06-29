@@ -35,7 +35,7 @@ export function ProfileScreen({ onBack, onAccount, onStorage, onTrash, onPrivacy
   const insets = useSafeAreaInsets();
   const { fullName, email, user, stats, storagePercent } = useProfileData();
   const { offlineModeEnabled, notificationsEnabled, toggleOfflineMode, toggleNotifications } = useAppPreferences();
-  const { pickAvatar, uploading } = useChangeAvatar();
+  const { pickAvatar, uploading, error: avatarError } = useChangeAvatar();
   const { signOut } = useSignOut(onSignedOut);
   const [signOutOpen, setSignOutOpen] = useState(false);
 
@@ -56,6 +56,12 @@ export function ProfileScreen({ onBack, onAccount, onStorage, onTrash, onPrivacy
             uploading={uploading}
             onAvatarPress={pickAvatar}
           />
+
+          {avatarError ? (
+            <Typography color="$danger" text="center" variant="body3">
+              {avatarError}
+            </Typography>
+          ) : null}
 
           <ProfileStatsCard collections={stats.collections} savedItems={stats.savedItems} storagePercent={storagePercent} />
 

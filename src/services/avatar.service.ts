@@ -6,30 +6,26 @@ import { supabase } from "./supabase-client";
 
 const BUCKET = "avatars";
 
-function extFor(mimeType?: string | null, uri?: string): string {
-  if (mimeType?.includes("png")) {
-    return "png";
-  }
-  if (mimeType?.includes("webp")) {
-    return "webp";
-  }
-  if (uri && /\.(png|webp|jpe?g)$/i.test(uri)) {
-    return uri.split(".").pop()!.toLowerCase();
-  }
-  return "jpg";
+// Normalize to a mime the avatars bucket accepts (png/jpeg/webp); anything else
+// (incl. "image/jpg" or missing) falls back to jpeg, matching the re-encode.
+function contentTypeFor(mimeType?: string | null): string {
+  const normalized = mimeType === "image/jpg" ? "image/jpeg" : mimeType;
+  return normalized && ["image/png", "image/jpeg", "image/webp"].includes(normalized) ? normalized : "image/jpeg";
 }
 
 // Uploads a picked image to the public avatars bucket (one object per user,
 // upserted) and returns its public URL. Mirrors files.service's base64 path.
 export async function uploadAvatar(localUri: string, mimeType?: string | null): Promise<string> {
   const userId = await getCurrentUserId();
-  const path = `${userId}/avatar.${extFor(mimeType, localUri)}`;
+  const contentType = contentTypeFor(mimeType);
+  const ext = contentType === "image/png" ? "png" : contentType === "image/webp" ? "webp" : "jpg";
+  const path = `${userId}/avatar.${ext}`;
 
   const base64 = await FileSystem.readAsStringAsync(localUri, { encoding: FileSystem.EncodingType.Base64 });
   const bytes = decode(base64);
 
   const { error } = await supabase.storage.from(BUCKET).upload(path, bytes, {
-    contentType: mimeType ?? "image/jpeg",
+    contentType,
     upsert: true
   });
   if (error) {
