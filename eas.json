@@ -11,7 +11,10 @@
     "preview": {
       "distribution": "internal",
       "channel": "preview",
-      "android": { "buildType": "apk" },
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease -PreactNativeArchitectures=arm64-v8a -Pandroid.enableBundleCompression=true -Pexpo.useLegacyPackaging=true"
+      },
       "ios": { "simulator": true },
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://mqmrgdrltqzuuhsbtdza.supabase.co",

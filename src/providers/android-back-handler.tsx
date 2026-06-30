@@ -15,11 +15,17 @@ export function AndroidBackHandler() {
         router.back();
         return true;
       }
-      const top = segments[0];
-      if (top && top !== "(tabs)") {
+      // Non-tab screen with no back history → send to home
+      if (segments[0] && segments[0] !== "(tabs)") {
         router.replace("/home");
         return true;
       }
+      // On a tab other than home → go to home tab instead of exiting
+      if (segments[0] === "(tabs)" && segments[1] !== "home") {
+        router.replace("/(tabs)/home");
+        return true;
+      }
+      // On home tab → allow app exit
       return false;
     };
 
