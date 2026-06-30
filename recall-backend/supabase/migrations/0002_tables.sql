@@ -112,7 +112,10 @@ create trigger trg_on_auth_user_created
   for each row execute function public.handle_new_user();
 
 -- Item counts per collection (active items only). Read-side convenience.
-create view public.collection_item_counts as
+-- security_invoker: the view runs with the querying user's permissions + RLS,
+-- so a user only ever sees counts for their own collections (never SECURITY DEFINER).
+create view public.collection_item_counts
+  with (security_invoker = true) as
   select collection_id, count(*)::int as item_count
   from public.saved_items
   where deleted_at is null and collection_id is not null
