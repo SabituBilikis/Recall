@@ -33,3 +33,4 @@ expo-env.d.ts
 
 # local env (publishable key is safe, but keep local config out of git)
 .env
+build.log

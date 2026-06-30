@@ -36,12 +36,15 @@ void SplashScreen.preventAutoHideAsync();
 export function AppProviders({ children }: PropsWithChildren) {
   const themeName = "light";
   const userId = useSessionStore((state) => state.userId);
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
     PlusJakartaSans_700Bold
   });
+  // Never let a font failure hold the app on a blank screen — fall back to the
+  // system font once fonts either load or error out.
+  const fontsReady = fontsLoaded || !!fontError;
 
   useEffect(() => {
     registerQueryOnlineManager();
@@ -146,12 +149,12 @@ export function AppProviders({ children }: PropsWithChildren) {
   }, [userId]);
 
   useEffect(() => {
-    if (fontsLoaded) {
+    if (fontsReady) {
       void SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsReady]);
 
-  if (!fontsLoaded) {
+  if (!fontsReady) {
     return null;
   }
 
