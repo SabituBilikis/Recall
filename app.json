@@ -20,7 +20,7 @@
         "backgroundColor": "#F3F1FF",
         "foregroundImage": "./assets/adaptive-foreground.png"
       },
-      "predictiveBackGestureEnabled": true,
+      "predictiveBackGestureEnabled": false,
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
