@@ -1,6 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 
+import { getSupabaseEnv } from "@/config/env";
+import { USE_BACKEND } from "@/lib/config/backend-flag";
+
 import type { Database } from "./generated/database.types";
 import { decryptString, encryptString } from "./crypto/secure-crypto";
 
@@ -18,18 +21,14 @@ const encryptedStorage = {
   removeItem: (key: string): Promise<void> => AsyncStorage.removeItem(key)
 };
 
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
-// Supabase's "publishable" key (formerly "anon") — the only key safe in the client.
-// RLS is the real authorization.
-const publishableKey =
-  process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+// Backend on → validate env and fail fast (getSupabaseEnv throws, caught by the
+// root ErrorBoundary). Backend off → the mock app runs with empty creds; the
+// client is constructed but never called.
+const { supabaseUrl, supabasePublishableKey } = USE_BACKEND
+  ? getSupabaseEnv()
+  : { supabaseUrl: "", supabasePublishableKey: "" };
 
-// Missing env warns (not throws) so the mock app keeps running until wired.
-if (!url || !publishableKey) {
-  console.warn("[supabase] EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY not set — backend calls will fail until configured.");
-}
-
-export const supabase = createClient<Database>(url ?? "", publishableKey ?? "", {
+export const supabase = createClient<Database>(supabaseUrl, supabasePublishableKey, {
   auth: {
     storage: encryptedStorage,
     persistSession: true,

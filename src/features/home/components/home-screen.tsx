@@ -1,4 +1,5 @@
-import { ActivityIndicator, FlatList, RefreshControl } from "react-native";
+import { useCallback } from "react";
+import { ActivityIndicator, FlatList, RefreshControl, type ListRenderItem } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { YStack } from "tamagui";
 
@@ -33,6 +34,10 @@ export type HomeScreenProps = {
 
 const listContentStyle = { paddingBottom: 24, paddingHorizontal: 16 } as const;
 
+// Hoisted for stable identities (no separator remount / keyExtractor churn per render).
+const ItemSeparator = () => <YStack height={8} />;
+const keyExtractor = (item: SavedItem) => item.id;
+
 export function HomeScreen({
   onBrowseCollections,
   onCollectionPress,
@@ -49,6 +54,11 @@ export function HomeScreen({
     useHomeData();
   const { refreshing, onRefresh } = useRefresh(refresh);
 
+  const renderItem = useCallback<ListRenderItem<SavedItem>>(
+    ({ item }) => <RecentItemCard item={item} onPress={onRecentItemPress} />,
+    [onRecentItemPress]
+  );
+
   return (
     <YStack backgroundColor="$surfaceSubtle" flex={1}>
       <YStack pb="$3" pt={insets.top + 8} px="$4">
@@ -63,8 +73,8 @@ export function HomeScreen({
       <FlatList
         contentContainerStyle={listContentStyle}
         data={recentItems}
-        ItemSeparatorComponent={() => <YStack height={8} />}
-        keyExtractor={(item) => item.id}
+        ItemSeparatorComponent={ItemSeparator}
+        keyExtractor={keyExtractor}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colorValues.primary500} colors={[colorValues.primary500]} />
         }
@@ -109,7 +119,7 @@ export function HomeScreen({
             />
           </YStack>
         }
-        renderItem={({ item }) => <RecentItemCard item={item} onPress={onRecentItemPress} />}
+        renderItem={renderItem}
         showsVerticalScrollIndicator={false}
       />
     </YStack>
