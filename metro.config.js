@@ -19,17 +19,20 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   }
   return (defaultResolveRequest ?? context.resolveRequest)(context, moduleName, platform);
 };
-// Keep Storybook stories out of the app bundle unless Storybook is explicitly
-// enabled. They're authoring-only and otherwise pull dev-only imports into the
-// production build.
-if (process.env.STORYBOOK_ENABLED !== "true") {
-  const storiesPattern = /\.stories\.(t|j)sx?$/;
+// Keep test files out of every bundle, and Storybook stories out unless Storybook
+// is explicitly enabled. Both are authoring-only and otherwise pull dev-only
+// imports into the production build.
+{
+  const authoringPatterns = [/\.test\.(t|j)sx?$/, /__tests__\//];
+  if (process.env.STORYBOOK_ENABLED !== "true") {
+    authoringPatterns.push(/\.stories\.(t|j)sx?$/);
+  }
   const existing = config.resolver.blockList;
   config.resolver.blockList = Array.isArray(existing)
-    ? [...existing, storiesPattern]
+    ? [...existing, ...authoringPatterns]
     : existing
-      ? [existing, storiesPattern]
-      : [storiesPattern];
+      ? [existing, ...authoringPatterns]
+      : authoringPatterns;
 }
 
 const tamaguiConfig = withTamagui(config, {
