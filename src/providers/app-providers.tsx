@@ -16,6 +16,7 @@ import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
 import { TamaguiProvider, Theme } from "tamagui";
 
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { USE_BACKEND } from "@/lib/config/backend-flag";
 import { getSession, handleAuthDeepLink, isAuthDeepLink, onAuthStateChange } from "@/services/auth.service";
 import { queryClient } from "@/services/query/query-client";
@@ -158,7 +159,7 @@ export function AppProviders({ children }: PropsWithChildren) {
     <TamaguiProvider config={tamaguiConfig} defaultTheme={themeName}>
       <Theme name={themeName}>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <ErrorBoundary>{children}</ErrorBoundary>
           <StatusBar style="dark" />
         </QueryClientProvider>
       </Theme>
