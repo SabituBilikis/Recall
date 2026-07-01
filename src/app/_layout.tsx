@@ -30,7 +30,6 @@ export default function RootLayout() {
         <Stack.Screen name="profile/privacy" />
         <Stack.Screen name="archive" />
         <Stack.Screen name="search" />
-        <Stack.Screen name="saved-items" />
         <Stack.Screen name="collection/[id]" />
         <Stack.Screen name="collection/create" />
         <Stack.Screen name="collection/edit/[id]" />

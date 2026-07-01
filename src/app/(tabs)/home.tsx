@@ -13,7 +13,6 @@ export default function HomeTabRoute() {
       onProfilePress={() => router.push("/profile")}
       onSaveFirstItem={() => router.push({ pathname: "/capture/[type]", params: { type: "new" } })}
       onSearch={() => router.push("/search")}
-      onSeeAllRecent={() => router.push("/saved-items")}
     />
   );
 }

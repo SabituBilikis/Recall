@@ -61,6 +61,10 @@ eas update --branch production --message "fix: ..."
 
 Blockers still open (see the audit / `Priority Fix List`):
 
+- [x] **Account deletion** (Play policy) — in-app flow (Profile → Delete Account) +
+      `delete-account` edge function (deployed). **Still TODO:** host a public web
+      **account-deletion URL** and declare it in the Play Data Safety form (Play requires a
+      web deletion path in addition to the in-app one).
 - [ ] **Crash reporting** wired (Sentry/Crashlytics) into the `reportError` seam in
       `src/components/ui/error-boundary.tsx`.
 - [ ] **Analytics** events implemented (PRD §32).

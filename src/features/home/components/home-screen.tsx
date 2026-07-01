@@ -29,7 +29,6 @@ export type HomeScreenProps = {
   onProfilePress: () => void;
   onSaveFirstItem: () => void;
   onSearch: () => void;
-  onSeeAllRecent: () => void;
 };
 
 const listContentStyle = { paddingBottom: 24, paddingHorizontal: 16 } as const;
@@ -46,8 +45,7 @@ export function HomeScreen({
   onRecentItemPress,
   onProfilePress,
   onSaveFirstItem,
-  onSearch,
-  onSeeAllRecent
+  onSearch
 }: HomeScreenProps) {
   const insets = useSafeAreaInsets();
   const { collections, currentUser, hasItems, quickCaptureActions, recentItems, refresh, loadMore, loadingMore, unreadCount, loadError } =
@@ -112,11 +110,7 @@ export function HomeScreen({
           <YStack gap="$6" pb="$4">
             <SearchBar onPress={onSearch} />
             <QuickCaptureSection actions={quickCaptureActions} onActionPress={onQuickCapture} />
-            <SectionHeader
-              actionLabel={hasItems ? homeContent.recentlySavedAction : undefined}
-              title={homeContent.recentlySavedTitle}
-              onActionPress={onSeeAllRecent}
-            />
+            <SectionHeader title={homeContent.recentlySavedTitle} />
           </YStack>
         }
         renderItem={renderItem}
