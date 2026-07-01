@@ -33,6 +33,14 @@ export const profileContent = {
     cancel: "Cancel",
     confirm: "Sign Out"
   },
+  deleteAccount: {
+    cta: "Delete Account",
+    modalTitle: "Delete your account?",
+    modalDescription:
+      "This permanently deletes your account and all saved items, collections, and files. This cannot be undone.",
+    cancel: "Cancel",
+    confirm: "Delete Account"
+  },
   account: {
     firstName: { label: "First Name", placeholder: "First name" },
     lastName: { label: "Last Name", placeholder: "Last name" },

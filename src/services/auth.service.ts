@@ -72,6 +72,16 @@ export function signOut() {
   return supabase.auth.signOut();
 }
 
+// Permanently delete the signed-in account + all owned data (Play-required). The
+// `delete-account` edge function runs the destructive work with the service role;
+// FK cascades from auth.users remove every owned row.
+export async function deleteAccount(): Promise<void> {
+  const { error } = await supabase.functions.invoke("delete-account", { method: "POST" });
+  if (error) {
+    throw error;
+  }
+}
+
 // Re-send the signup confirmation email.
 export function resendConfirmation(email: string) {
   return supabase.auth.resend({ type: "signup", email });

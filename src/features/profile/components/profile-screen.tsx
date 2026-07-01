@@ -6,6 +6,7 @@ import { XStack, YStack } from "tamagui";
 import { SignOutIcon } from "@/components/ui/icons";
 import { Typography } from "@/components/ui/typography";
 import { LibraryHeader } from "@/features/library/components/library-header";
+import { useDeleteAccount } from "@/features/settings/hooks/use-delete-account";
 import { useSignOut } from "@/features/settings/hooks/use-sign-out";
 import { tileBorderWidths } from "@/theme/tokens";
 import { colorValues } from "@/theme/tokens/color";
@@ -18,6 +19,7 @@ import { ProfileHeader } from "./profile-header";
 import { ProfileStatsCard } from "./profile-stats-card";
 import { SettingsListItem } from "./settings-list-item";
 import { SettingsToggle } from "./settings-toggle";
+import { DeleteAccountModal } from "./delete-account-modal";
 import { SignOutModal } from "./sign-out-modal";
 
 export type ProfileScreenProps = {
@@ -37,7 +39,9 @@ export function ProfileScreen({ onBack, onAccount, onStorage, onTrash, onPrivacy
   const { offlineModeEnabled, notificationsEnabled, toggleOfflineMode, toggleNotifications } = useAppPreferences();
   const { pickAvatar, uploading, error: avatarError } = useChangeAvatar();
   const { signOut } = useSignOut(onSignedOut);
+  const { deleteAccount, deleting, error: deleteError } = useDeleteAccount(onSignedOut);
   const [signOutOpen, setSignOutOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const settings = profileContent.settings;
 
@@ -111,6 +115,23 @@ export function ProfileScreen({ onBack, onAccount, onStorage, onTrash, onPrivacy
               </Typography>
             </XStack>
           </XStack>
+
+          <XStack justify="center" width="100%">
+            <XStack
+              accessibilityRole="button"
+              accessibilityLabel={profileContent.deleteAccount.cta}
+              items="center"
+              justify="center"
+              pressStyle={{ opacity: 0.6 }}
+              px="$6"
+              py="$2"
+              onPress={() => setDeleteOpen(true)}
+            >
+              <Typography color="$textTertiary" variant="buttonMedium">
+                {profileContent.deleteAccount.cta}
+              </Typography>
+            </XStack>
+          </XStack>
         </YStack>
       </ScrollView>
 
@@ -121,6 +142,14 @@ export function ProfileScreen({ onBack, onAccount, onStorage, onTrash, onPrivacy
           setSignOutOpen(false);
           signOut();
         }}
+      />
+
+      <DeleteAccountModal
+        deleting={deleting}
+        error={deleteError}
+        visible={deleteOpen}
+        onCancel={() => setDeleteOpen(false)}
+        onConfirm={() => void deleteAccount()}
       />
     </YStack>
   );
