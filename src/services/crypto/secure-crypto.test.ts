@@ -15,8 +15,8 @@ jest.mock("expo-crypto", () => ({
 import { decryptString, encryptString } from "./secure-crypto";
 
 describe("secure-crypto", () => {
-  it("round-trips a string (encrypt → decrypt returns the original)", async () => {
-    const plain = "user note: buy milk + token=eyJhbGci.abc.def-_123";
+  it("round-trips a string incl. 4-byte unicode (emoji)", async () => {
+    const plain = "note: buy milk 🥛 café — token=eyJ.abc.def";
     const cipher = await encryptString(plain);
     expect(cipher).not.toContain(plain);
     expect(await decryptString(cipher)).toBe(plain);
@@ -30,15 +30,25 @@ describe("secure-crypto", () => {
     expect(await decryptString(b)).toBe("same");
   });
 
-  it("returns null for a non-conforming payload (e.g. legacy plaintext)", async () => {
-    expect(await decryptString("plain-legacy-value")).toBeNull();
-    expect(await decryptString("")).toBeNull();
+  it("uses the authenticated 3-part wire format (iv:cipher:tag)", async () => {
+    expect((await encryptString("x")).split(":")).toHaveLength(3);
   });
 
-  it("returns null when the IV is corrupted", async () => {
-    const cipher = await encryptString("secret");
-    const [, body] = cipher.split(":");
-    expect(await decryptString(`zzzz:${body}`)).toBeNull();
+  it("returns null for non-conforming payloads (legacy plaintext / 2-part)", async () => {
+    expect(await decryptString("plain-legacy-value")).toBeNull();
+    expect(await decryptString("")).toBeNull();
+    expect(await decryptString("deadbeef:cafe")).toBeNull(); // old 2-part format
+  });
+
+  it("rejects a tampered ciphertext (HMAC fails → null)", async () => {
+    const [iv, body, tag] = (await encryptString("secret")).split(":");
+    const flipped = body.slice(0, -1) + (body.at(-1) === "0" ? "1" : "0");
+    expect(await decryptString(`${iv}:${flipped}:${tag}`)).toBeNull();
+  });
+
+  it("rejects a forged/altered tag", async () => {
+    const [iv, body] = (await encryptString("secret")).split(":");
+    expect(await decryptString(`${iv}:${body}:${"0".repeat(64)}`)).toBeNull();
   });
 
   it("generates the keystore key only once (cached + persisted)", async () => {
