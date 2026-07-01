@@ -21,12 +21,30 @@ const encryptedStorage = {
   removeItem: (key: string): Promise<void> => AsyncStorage.removeItem(key)
 };
 
-// Backend on → validate env and fail fast (getSupabaseEnv throws, caught by the
-// root ErrorBoundary). Backend off → the mock app runs with empty creds; the
-// client is constructed but never called.
-const { supabaseUrl, supabasePublishableKey } = USE_BACKEND
-  ? getSupabaseEnv()
-  : { supabaseUrl: "", supabasePublishableKey: "" };
+// createClient rejects an empty URL ("supabaseUrl is required"), so a
+// syntactically valid dummy keeps construction from throwing at import; real
+// backend calls against it simply fail into the stores' error states.
+const FALLBACK = { supabaseUrl: "https://unconfigured.invalid", supabasePublishableKey: "unconfigured" };
+
+// Backend on → validate env. On failure we DON'T throw at module load (that would
+// be an uncatchable native startup crash); instead we record the error and let the
+// BackendEnvGate surface it during render, where the root ErrorBoundary can show a
+// graceful screen. Backend off → the mock app never calls the client.
+export let supabaseEnvError: string | null = null;
+
+function resolveEnv() {
+  if (!USE_BACKEND) {
+    return FALLBACK;
+  }
+  try {
+    return getSupabaseEnv();
+  } catch (error) {
+    supabaseEnvError = error instanceof Error ? error.message : String(error);
+    return FALLBACK;
+  }
+}
+
+const { supabaseUrl, supabasePublishableKey } = resolveEnv();
 
 export const supabase = createClient<Database>(supabaseUrl, supabasePublishableKey, {
   auth: {

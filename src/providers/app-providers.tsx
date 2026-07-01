@@ -22,7 +22,7 @@ import { getSession, handleAuthDeepLink, isAuthDeepLink, onAuthStateChange } fro
 import { queryClient } from "@/services/query/query-client";
 import { registerQueryOnlineManager } from "@/services/network/register-online-manager";
 import { subscribeToUserData } from "@/services/realtime.service";
-import { supabase } from "@/services/supabase-client";
+import { supabase, supabaseEnvError } from "@/services/supabase-client";
 import { flushOutbox } from "@/services/sync/mutation-queue";
 import { useCollectionsStore } from "@/store/use-collections-store";
 import { useNotificationsStore } from "@/store/use-notifications-store";
@@ -32,6 +32,16 @@ import { useSyncStore } from "@/store/use-sync-store";
 import { tamaguiConfig } from "@/theme";
 
 void SplashScreen.preventAutoHideAsync();
+
+// Surfaces a backend env misconfiguration during render (not at import time), so
+// the root ErrorBoundary shows a graceful screen instead of an uncatchable native
+// startup crash. No-op when env is valid.
+function BackendEnvGate() {
+  if (supabaseEnvError) {
+    throw new Error(supabaseEnvError);
+  }
+  return null;
+}
 
 export function AppProviders({ children }: PropsWithChildren) {
   const themeName = "light";
@@ -162,7 +172,10 @@ export function AppProviders({ children }: PropsWithChildren) {
     <TamaguiProvider config={tamaguiConfig} defaultTheme={themeName}>
       <Theme name={themeName}>
         <QueryClientProvider client={queryClient}>
-          <ErrorBoundary>{children}</ErrorBoundary>
+          <ErrorBoundary>
+            <BackendEnvGate />
+            {children}
+          </ErrorBoundary>
           <StatusBar style="dark" />
         </QueryClientProvider>
       </Theme>
