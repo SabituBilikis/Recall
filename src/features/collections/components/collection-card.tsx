@@ -13,6 +13,8 @@ export function CollectionCard({ collection, onPress }: { collection: Collection
 
   return (
     <YStack
+      accessibilityRole="button"
+      accessibilityLabel={`Collection ${collection.name}, ${collection.itemCount} ${collectionsContent.itemsSuffix}`}
       backgroundColor="$surfacePrimary"
       borderColor="$surfaceMuted"
       borderWidth={tileBorderWidths.card}

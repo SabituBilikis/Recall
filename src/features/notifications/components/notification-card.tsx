@@ -13,6 +13,9 @@ export function NotificationCard({ notification, onPress }: { notification: Noti
 
   return (
     <XStack
+      accessibilityRole="button"
+      accessibilityState={{ selected: !notification.read }}
+      accessibilityLabel={`${notification.read ? "" : "Unread. "}${notification.title}. ${notification.body}`}
       backgroundColor={notification.read ? "$surfacePrimary" : "$primary50"}
       borderColor="$borderSubtle"
       borderWidth={tileBorderWidths.card}

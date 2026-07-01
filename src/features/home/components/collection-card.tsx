@@ -22,6 +22,8 @@ export function CollectionCard({ collection, onPress }: CollectionCardProps) {
 
   return (
     <YStack
+      accessibilityRole="button"
+      accessibilityLabel={`Collection ${collection.name}, ${collection.itemCount} items`}
       backgroundColor="$surfacePrimary"
       flex={1}
       gap="$3"

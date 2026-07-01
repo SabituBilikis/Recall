@@ -22,6 +22,9 @@ export function ProfileHeader({ fullName, email, avatarUrl, onAvatarPress, uploa
   return (
     <YStack gap="$3" items="center" width="100%">
       <YStack
+        accessibilityRole={onAvatarPress ? "button" : undefined}
+        accessibilityLabel={onAvatarPress ? "Change profile photo" : undefined}
+        accessibilityState={{ busy: !!uploading }}
         borderColor="$primary200"
         borderWidth={2}
         height={AVATAR_SIZE + 8}

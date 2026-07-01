@@ -51,6 +51,8 @@ export function TrashItemCard({
 
       <XStack gap="$3" items="center">
         <XStack
+          accessibilityRole="button"
+          accessibilityLabel={`Restore ${item.title}`}
           borderColor="$primary900"
           borderWidth={1}
           items="center"
@@ -66,6 +68,8 @@ export function TrashItemCard({
           </Typography>
         </XStack>
         <XStack
+          accessibilityRole="button"
+          accessibilityLabel={`Delete ${item.title} permanently`}
           backgroundColor="$primary900"
           flex={1}
           items="center"

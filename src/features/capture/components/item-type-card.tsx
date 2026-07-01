@@ -14,6 +14,9 @@ type ItemTypeCardProps = {
 export function ItemTypeCard({ onPress, option, selected }: ItemTypeCardProps) {
   return (
     <YStack
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      accessibilityLabel={`${option.title}. ${option.description}`}
       backgroundColor={selected ? "$primary100" : "$surfacePrimary"}
       p="$3"
       pressStyle={{ opacity: 0.8 }}

@@ -18,6 +18,8 @@ type SettingsListItemProps = {
 export function SettingsListItem({ label, description, right, onPress }: SettingsListItemProps) {
   return (
     <XStack
+      accessibilityRole={onPress ? "button" : undefined}
+      accessibilityLabel={onPress ? `${label}. ${description}` : undefined}
       items="center"
       justify="space-between"
       gap="$3"
