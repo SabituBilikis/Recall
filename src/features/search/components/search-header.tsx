@@ -8,6 +8,8 @@ export function SearchHeader({ onBack }: { onBack: () => void }) {
   return (
     <XStack gap="$2" items="center" width="100%">
       <YStack
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
         backgroundColor="$surfacePrimary"
         height={32}
         items="center"

@@ -16,7 +16,12 @@ export function PasswordInput({ showPassword, onToggleShowPassword, ...inputProp
       autoCapitalize="none"
       secureTextEntry={!showPassword}
       rightIcon={() => (
-        <YStack pressStyle={{ opacity: 0.6 }} onPress={onToggleShowPassword}>
+        <YStack
+          accessibilityRole="button"
+          accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+          pressStyle={{ opacity: 0.6 }}
+          onPress={onToggleShowPassword}
+        >
           {showPassword ? (
             <EyeOffIcon color={colorValues.grey400} size={20} />
           ) : (

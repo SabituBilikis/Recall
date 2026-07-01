@@ -10,6 +10,8 @@ export function AuthHeader({ onBack }: { onBack: () => void }) {
   return (
     <XStack height="$10" items="center" justify="center" position="relative" width="100%">
       <YStack
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
         backgroundColor="$accentPrimarySoft"
         height="$10"
         items="center"

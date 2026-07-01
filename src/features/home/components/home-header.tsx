@@ -18,7 +18,14 @@ type HomeHeaderProps = {
 export function HomeHeader({ onNotificationsPress, onProfilePress, user, unreadCount = 0 }: HomeHeaderProps) {
   return (
     <XStack items="center" justify="space-between" width="100%">
-      <XStack gap="$4" items="center" pressStyle={{ opacity: 0.6 }} onPress={onProfilePress}>
+      <XStack
+        accessibilityRole="button"
+        accessibilityLabel="Open profile"
+        gap="$4"
+        items="center"
+        pressStyle={{ opacity: 0.6 }}
+        onPress={onProfilePress}
+      >
         <Avatar initials={user.firstName.charAt(0)} size={24} uri={user.avatarUrl} />
         <Typography color="$onboardingTextPrimary" variant="subtitle1">
           {homeContent.greetingPrefix}
@@ -27,6 +34,8 @@ export function HomeHeader({ onNotificationsPress, onProfilePress, user, unreadC
       </XStack>
 
       <YStack
+        accessibilityRole="button"
+        accessibilityLabel={unreadCount > 0 ? `Notifications, ${unreadCount} unread` : "Notifications"}
         backgroundColor="$surfacePrimary"
         items="center"
         justify="center"

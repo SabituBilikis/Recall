@@ -17,6 +17,8 @@ export function ItemDetailsHeader({ favorite, onBack, onMore, onToggleFavorite }
   return (
     <XStack gap="$2" items="center" width="100%">
       <YStack
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
         backgroundColor="$surfacePrimary"
         height={32}
         items="center"
@@ -35,6 +37,9 @@ export function ItemDetailsHeader({ favorite, onBack, onMore, onToggleFavorite }
 
       <XStack gap="$2" items="center">
         <YStack
+          accessibilityRole="button"
+          accessibilityState={{ selected: favorite }}
+          accessibilityLabel={favorite ? "Remove from favorites" : "Add to favorites"}
           backgroundColor="$surfacePrimary"
           height={32}
           items="center"
@@ -47,6 +52,8 @@ export function ItemDetailsHeader({ favorite, onBack, onMore, onToggleFavorite }
           <StarIcon color={favorite ? colorValues.yellow500 : colorValues.grey300} size={18} />
         </YStack>
         <YStack
+          accessibilityRole="button"
+          accessibilityLabel="More options"
           backgroundColor="$surfacePrimary"
           height={32}
           items="center"

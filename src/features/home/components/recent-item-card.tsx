@@ -21,6 +21,8 @@ function typeLabel(type: SavedItem["type"]) {
 export const RecentItemCard = memo(function RecentItemCard({ item, onPress }: RecentItemCardProps) {
   return (
     <YStack
+      accessibilityRole="button"
+      accessibilityLabel={`${typeLabel(item.type)}: ${item.title}`}
       backgroundColor="$surfacePrimary"
       pressStyle={{ opacity: 0.7 }}
       p="$3"

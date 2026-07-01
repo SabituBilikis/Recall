@@ -8,6 +8,8 @@ export function LibraryHeader({ onBack, title }: { onBack: () => void; title: st
   return (
     <XStack gap="$2" items="center" width="100%">
       <YStack
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
         backgroundColor="$surfacePrimary"
         height={32}
         items="center"

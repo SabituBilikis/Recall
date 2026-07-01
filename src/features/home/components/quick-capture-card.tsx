@@ -13,6 +13,8 @@ type QuickCaptureCardProps = {
 export function QuickCaptureCard({ action, onPress }: QuickCaptureCardProps) {
   return (
     <YStack
+      accessibilityRole="button"
+      accessibilityLabel={action.label}
       backgroundColor="$surfacePrimary"
       flex={1}
       pressStyle={{ opacity: 0.7 }}

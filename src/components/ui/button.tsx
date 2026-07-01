@@ -107,6 +107,8 @@ export function Button({
 
   return (
     <TamaguiButton
+      accessibilityRole="button"
+      accessibilityState={{ disabled: !!disabled, busy: loading }}
       rounded={sizeStyle.radius}
       {...buttonProps}
       backgroundColor={appearanceStyle.bg}

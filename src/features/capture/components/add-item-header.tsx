@@ -14,6 +14,8 @@ export function AddItemHeader({ onBack, onClose, title }: AddItemHeaderProps) {
   return (
     <XStack items="center" justify="space-between" width="100%">
       <YStack
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
         backgroundColor="$surfacePrimary"
         height={32}
         items="center"
@@ -31,6 +33,8 @@ export function AddItemHeader({ onBack, onClose, title }: AddItemHeaderProps) {
       </Typography>
 
       <YStack
+        accessibilityRole="button"
+        accessibilityLabel="Close"
         backgroundColor="$surfaceMuted"
         height={32}
         items="center"

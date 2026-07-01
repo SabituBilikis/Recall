@@ -8,6 +8,8 @@ export function FloatingActionButton({ onPress }: { onPress: () => void }) {
   return (
     <YStack
       {...nativeShadowTokens[600]}
+      accessibilityRole="button"
+      accessibilityLabel="Capture new item"
       backgroundColor="$buttonFilledBg"
       height={56}
       items="center"

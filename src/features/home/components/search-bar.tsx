@@ -11,6 +11,8 @@ import { homeContent } from "../constants/home-content";
 export function SearchBar({ onPress }: { onPress: () => void }) {
   return (
     <XStack
+      accessibilityRole="search"
+      accessibilityLabel="Search your saved items"
       backgroundColor="$surfacePrimary"
       borderColor="$borderSubtle"
       borderWidth={inputBorderTokens.default}

@@ -43,6 +43,9 @@ export function BottomNavigation({ activeIndex, onCapturePress, onTabPress }: Bo
 
           return (
             <YStack
+              accessibilityRole="tab"
+              accessibilityState={{ selected: isActive }}
+              accessibilityLabel={tab.name === "home" ? "Home" : "Collections"}
               gap="$0.5"
               items="center"
               key={tab.name}
