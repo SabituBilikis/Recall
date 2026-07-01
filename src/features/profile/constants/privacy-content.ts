@@ -44,7 +44,7 @@ export const privacyContent = {
       heading: "Data retention & deletion",
       body: [
         "Items you delete are kept in Trash for 30 days, then permanently removed.",
-        "If you delete your account, your content is removed from our systems. Contact us if you would like your account deleted."
+        "You can permanently delete your account and all associated data at any time from Profile → Delete Account. Account deletion is immediate and irreversible."
       ]
     },
     {
