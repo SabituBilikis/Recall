@@ -97,8 +97,8 @@ export async function runOrQueue(op: OutboxOp, run: () => Promise<unknown>): Pro
 const MAX_TRIES = 5;
 
 // A failure the server will reject every time → no point retrying. Drop the op
-// instead of letting it block the queue forever.
-function isPermanent(error: unknown): boolean {
+// instead of letting it block the queue forever. Exported for unit testing.
+export function isPermanent(error: unknown): boolean {
   const err = error as { status?: number; statusCode?: number; code?: string };
   // Unique violation: the row already landed (idempotent replay) → treat as done.
   if (err?.code === "23505") {
