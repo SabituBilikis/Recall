@@ -34,6 +34,9 @@ export function DeleteItemModal({ loading, onCancel, onConfirm, visible }: Delet
               </Button>
             </YStack>
             <YStack
+              accessibilityRole="button"
+              accessibilityState={{ busy: loading }}
+              accessibilityLabel={itemDetailsContent.deleteModal.confirm}
               backgroundColor="$danger"
               flex={1}
               height="$12"

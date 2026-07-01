@@ -27,6 +27,9 @@ export function CollectionSelector({ onChange, value }: CollectionSelectorProps)
       </Typography>
 
       <YStack
+        accessibilityRole="button"
+        accessibilityState={{ expanded: isOpen }}
+        accessibilityLabel={`${captureContent.fields.collection.label}: ${value || captureContent.fields.collection.placeholder}`}
         backgroundColor="$inputBgOutline"
         borderColor={isOpen ? "$inputBorderFocus" : "$inputBorderDefault"}
         borderWidth={inputBorderTokens.default}
@@ -55,6 +58,8 @@ export function CollectionSelector({ onChange, value }: CollectionSelectorProps)
         >
           {collections.map((collection) => (
             <XStack
+              accessibilityRole="button"
+              accessibilityLabel={collection.name}
               key={collection.id}
               pressStyle={{ backgroundColor: "$backgroundHover" }}
               px="$3"

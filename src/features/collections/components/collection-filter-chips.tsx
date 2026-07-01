@@ -18,6 +18,9 @@ export function CollectionFilterChips({ onChange, value }: CollectionFilterChips
           const isActive = value === chip.id;
           return (
             <YStack
+              accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}
+              accessibilityLabel={`Filter: ${chip.label}`}
               backgroundColor={isActive ? "$primary500" : "$transparent"}
               borderColor="$borderSubtle"
               borderWidth={isActive ? 0 : tileBorderWidths.card}

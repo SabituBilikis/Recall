@@ -26,7 +26,14 @@ export function CollectionIconPicker({ color, onChange, value }: CollectionIconP
 
       <XStack items="center" justify="space-between" width="100%">
         {collectionIconOptions.map((id) => (
-          <YStack key={id} pressStyle={{ opacity: 0.7 }} onPress={() => onChange(id)}>
+          <YStack
+            accessibilityRole="button"
+            accessibilityState={{ selected: value === id }}
+            accessibilityLabel={`${id} icon`}
+            key={id}
+            pressStyle={{ opacity: 0.7 }}
+            onPress={() => onChange(id)}
+          >
             <CollectionGlyph color={value === id ? accentHex : colorValues.grey300} id={id} size={24} />
           </YStack>
         ))}

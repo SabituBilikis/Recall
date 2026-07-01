@@ -16,6 +16,10 @@ function ToolbarButton({ id, onAction }: { id: EditorIconId; onAction: (id: Edit
 
   return (
     <YStack
+      accessibilityRole={isActive ? "button" : undefined}
+      accessibilityLabel={isActive ? id : undefined}
+      accessibilityElementsHidden={!isActive}
+      importantForAccessibility={isActive ? "yes" : "no-hide-descendants"}
       opacity={isActive ? 1 : 0.35}
       p="$1"
       pressStyle={isActive ? { opacity: 0.5 } : undefined}

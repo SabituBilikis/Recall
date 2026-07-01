@@ -21,6 +21,9 @@ export function CollectionColorPicker({ onChange, value }: CollectionColorPicker
       <XStack gap="$8" items="center" justify="center" width="100%">
         {collectionColorOptions.map((option) => (
           <YStack
+            accessibilityRole="button"
+            accessibilityState={{ selected: value === option.id }}
+            accessibilityLabel={`${option.id} color`}
             backgroundColor={option.swatchToken}
             borderColor={option.accentToken}
             borderWidth={value === option.id ? 2 : 0}

@@ -17,7 +17,7 @@ type ItemActionMenuProps = {
 
 function MenuRow({ Icon, label, onPress }: { Icon: typeof EditIcon; label: string; onPress: () => void }) {
   return (
-    <XStack gap="$3" items="center" pressStyle={{ backgroundColor: "$backgroundHover" }} px="$3" py="$3" onPress={onPress}>
+    <XStack accessibilityRole="button" accessibilityLabel={label} gap="$3" items="center" pressStyle={{ backgroundColor: "$backgroundHover" }} px="$3" py="$3" onPress={onPress}>
       <Icon color={colorValues.grey900} size={24} />
       <Typography color="$onboardingTextPrimary" variant="body1">
         {label}
@@ -36,7 +36,7 @@ export function ItemActionMenu({ onClose, onDelete, onEdit, visible }: ItemActio
 
   return (
     <YStack bottom={0} left={0} position="absolute" right={0} top={0} zIndex={100}>
-      <YStack flex={1} onPress={onClose} />
+      <YStack accessibilityRole="button" accessibilityLabel="Close menu" flex={1} onPress={onClose} />
       <YStack
         {...nativeShadowTokens[500]}
         backgroundColor="$surfacePrimary"

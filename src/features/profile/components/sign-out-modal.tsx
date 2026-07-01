@@ -37,6 +37,8 @@ export function SignOutModal({
               </Button>
             </YStack>
             <YStack
+              accessibilityRole="button"
+              accessibilityLabel={profileContent.signOut.confirm}
               backgroundColor="$danger"
               flex={1}
               height="$12"
