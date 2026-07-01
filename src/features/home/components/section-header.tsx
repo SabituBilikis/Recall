@@ -15,7 +15,14 @@ export function SectionHeader({ actionLabel, onActionPress, title }: SectionHead
         {title}
       </Typography>
       {actionLabel ? (
-        <Typography color="$primary500" pressStyle={{ opacity: 0.6 }} variant="subtitle2" onPress={onActionPress}>
+        <Typography
+          accessibilityRole="button"
+          accessibilityLabel={actionLabel}
+          color="$primary500"
+          pressStyle={{ opacity: 0.6 }}
+          variant="subtitle2"
+          onPress={onActionPress}
+        >
           {actionLabel}
         </Typography>
       ) : null}
