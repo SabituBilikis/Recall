@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { track } from "@/lib/analytics/analytics";
 import { USE_BACKEND } from "@/lib/config/backend-flag";
 import { searchItems } from "@/lib/search";
 import { searchSavedItems } from "@/services/search.service";
@@ -63,6 +64,7 @@ export function useSearch() {
         .then((rows) => {
           if (active) {
             setBackendResults(rows);
+            track("search_used", { queryLength: query.length, resultCount: rows.length });
           }
         })
         .catch((error: unknown) => console.warn("[search] failed", error));

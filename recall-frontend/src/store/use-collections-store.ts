@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import { mockCollections } from "@/features/collections/mock/mock-collections";
+import { track } from "@/lib/analytics/analytics";
 import { USE_BACKEND } from "@/lib/config/backend-flag";
 import { cacheGet, cacheSet } from "@/services/cache/local-cache";
 import * as collectionsService from "@/services/collections.service";
@@ -61,9 +62,10 @@ export const useCollectionsStore = create<CollectionsState>()((set, get) => ({
     void runOrQueue(
       { kind: "collection.create", payload: { id: collection.id, ...newCollection } },
       () =>
-        collectionsService.createCollection(newCollection, collection.id).then((saved) =>
-          set((state) => ({ collections: state.collections.map((item) => (item.id === collection.id ? saved : item)) }))
-        )
+        collectionsService.createCollection(newCollection, collection.id).then((saved) => {
+          track("collection_created", { color: collection.color, icon: collection.icon });
+          set((state) => ({ collections: state.collections.map((item) => (item.id === collection.id ? saved : item)) }));
+        })
     ).catch((error: unknown) => {
       console.warn("[collections] create failed", error);
       set((state) => ({ collections: state.collections.filter((item) => item.id !== collection.id) }));

@@ -10,6 +10,7 @@ import type {
 import type { SavedItem } from "@/types/saved-item";
 
 import { deriveFileType } from "@/features/capture/utils/file-type";
+import { track } from "@/lib/analytics/analytics";
 import { USE_BACKEND } from "@/lib/config/backend-flag";
 import { newId } from "@/lib/id";
 import { createItem } from "@/services/items.service";
@@ -86,6 +87,8 @@ async function persistDraft(draft: CaptureDraft): Promise<SavedItem> {
       collectionId,
       fileType: deriveFileType(asset)
     });
+    track("file_uploaded", { type: draft.selectedItemType });
+    track("item_saved", { type: draft.selectedItemType, hasCollection: !!collectionId });
     return { ...local, id: saved.id, savedAtLabel: saved.savedAtLabel, collectionName: draft.itemCollection || saved.collectionName };
   }
 
@@ -106,6 +109,7 @@ async function persistDraft(draft: CaptureDraft): Promise<SavedItem> {
   await runOrQueue({ kind: "item.create", payload: { id: local.id, ...create } }, () =>
     createItem(create, local.id)
   );
+  track("item_saved", { type: draft.selectedItemType, hasCollection: !!collectionId });
   return local;
 }
 

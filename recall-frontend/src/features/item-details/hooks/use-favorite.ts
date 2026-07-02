@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { track } from "@/lib/analytics/analytics";
 import { USE_BACKEND } from "@/lib/config/backend-flag";
 import { isFavorite, setFavorite } from "@/services/items.service";
 import { runOrQueue } from "@/services/sync/mutation-queue";
@@ -28,6 +29,9 @@ export function useFavorite(itemId: string) {
   function toggle() {
     const next = !favorite;
     setFavoriteState(next);
+    if (next) {
+      track("favorite_added");
+    }
     if (!USE_BACKEND) {
       return;
     }

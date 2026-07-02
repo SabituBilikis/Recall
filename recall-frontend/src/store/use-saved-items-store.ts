@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+import { track } from "@/lib/analytics/analytics";
 import { USE_BACKEND } from "@/lib/config/backend-flag";
 import { cacheGet, cacheSet } from "@/services/cache/local-cache";
 import * as itemsService from "@/services/items.service";
@@ -76,6 +77,7 @@ export const useSavedItemsStore = create<SavedItemsState>()((set, get) => ({
   deleteItem: (id) => {
     const previous = get().items;
     set((state) => ({ items: state.items.filter((item) => item.id !== id) }));
+    track("item_archived");
     if (!USE_BACKEND) {
       return;
     }
