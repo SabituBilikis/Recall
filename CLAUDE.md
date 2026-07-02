@@ -2,6 +2,13 @@
 
 Guidance for working in this repo. Keep it lean — production-ready React Native + Expo + TypeScript.
 
+## Repo layout
+
+Monorepo. The Expo app lives in **`recall-frontend/`** (all source, `app.json`, `package.json`,
+`eas.json`, `metro`/`babel`/`tsconfig`, etc.). The Supabase project is in `recall-backend/`;
+hostable legal pages in `website/`. **Run all `npm` / `expo` / `eas` commands from
+`recall-frontend/`.** Paths below (`src/`, etc.) are relative to `recall-frontend/`.
+
 ## Product
 
 **Recall** — personal knowledge workspace to save (screenshots, links, notes, PDFs, files, ideas) and retrieve instantly. Core promise: capture in seconds, retrieve in milliseconds. MVP excludes AI/OCR/extensions/collaboration.

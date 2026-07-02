@@ -7,7 +7,8 @@ import { BackHandler } from "react-native";
 // instead of exiting the app. Only the tabs/home root falls through to the
 // default exit. No-op on iOS (BackHandler has no effect there).
 export function AndroidBackHandler() {
-  const segments = useSegments();
+  // Widened to string[] so the check doesn't depend on generated typed-route tuples.
+  const segments = useSegments() as string[];
 
   useEffect(() => {
     const onBack = () => {
