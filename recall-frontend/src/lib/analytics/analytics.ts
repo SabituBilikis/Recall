@@ -12,7 +12,7 @@ export type AnalyticsEventName =
   | "file_uploaded"
   | "item_archived";
 
-export type AnalyticsProps = Record<string, string | number | boolean | undefined>;
+export type AnalyticsProps = Record<string, string | number | boolean>;
 
 export type AnalyticsProvider = {
   track: (event: AnalyticsEventName, props?: AnalyticsProps) => void;

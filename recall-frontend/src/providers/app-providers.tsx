@@ -17,6 +17,8 @@ import { useEffect } from "react";
 import { TamaguiProvider, Theme } from "tamagui";
 
 import { ErrorBoundary } from "@/components/ui/error-boundary";
+import { identifyUser, resetAnalytics } from "@/lib/analytics/analytics";
+import { initAnalytics } from "@/lib/analytics/init-analytics";
 import { USE_BACKEND } from "@/lib/config/backend-flag";
 import { initMonitoring } from "@/lib/monitoring/sentry";
 import { getSession, handleAuthDeepLink, isAuthDeepLink, onAuthStateChange } from "@/services/auth.service";
@@ -60,7 +62,17 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   useEffect(() => {
     registerQueryOnlineManager();
+    initAnalytics();
   }, []);
+
+  // Tie analytics identity to the session: identify on sign-in, reset on sign-out.
+  useEffect(() => {
+    if (userId) {
+      identifyUser(userId);
+    } else {
+      resetAnalytics();
+    }
+  }, [userId]);
 
   // Keep the JWT fresh. RN needs AppState wiring for autoRefreshToken to run —
   // without it the token expires, auth.uid() goes null and RLS denies (42501).
