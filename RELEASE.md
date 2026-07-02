@@ -68,9 +68,13 @@ Blockers still open (see the audit / `Priority Fix List`):
 - [ ] **Crash reporting** wired (Sentry/Crashlytics) into the `reportError` seam in
       `src/components/ui/error-boundary.tsx`.
 - [ ] **Analytics** events implemented (PRD §32).
-- [ ] **Terms URL** set — `src/features/auth/constants/signup-content.ts` `termsUrl` is a
-      placeholder (`https://recall.app/terms`); point to the real hosted page.
-- [ ] **Privacy Policy** URL hosted + entered in the Play listing.
+- [x] **Terms URL** wired → `https://sabitubilikis.github.io/Recall-site/terms.html`
+      (pages pushed to the `Recall-site` public repo; **enable GitHub Pages** on that repo:
+      Settings → Pages → Deploy from branch `main` / root).
+- [ ] **Privacy Policy** URL — enter `https://sabitubilikis.github.io/Recall-site/privacy.html`
+      in the Play listing + Data Safety (live once Pages is enabled).
+- [ ] **Account-deletion URL** for Data Safety →
+      `https://sabitubilikis.github.io/Recall-site/delete-account.html`.
 - [ ] **Accessibility** device pass — TalkBack sweep, contrast, 200% font scaling.
 - [ ] Leaked-password protection enabled (Supabase → Auth → Policies).
 

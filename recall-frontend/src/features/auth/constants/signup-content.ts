@@ -14,8 +14,8 @@ export const signupContent = {
   passwordRequirementsTitle: "Password must Contain:",
   termsPrefix: "By signing up you accept our ",
   termsLink: "Terms",
-  // Hosted Terms of Service page. Replace with the production URL before release.
-  termsUrl: "https://recall.app/terms",
+  // Hosted Terms of Service page (Recall-site GitHub Pages).
+  termsUrl: "https://sabitubilikis.github.io/Recall-site/terms.html",
   submitLabel: "Create Account",
   footerPrompt: "Have An Account? ",
   footerLink: "Sign In"
