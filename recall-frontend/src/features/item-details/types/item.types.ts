@@ -13,6 +13,9 @@ export type DetailItem = {
   url?: string;
   fileName?: string;
   thumbnailUri?: string; // real captured image
+  fileUrl?: string; // signed URL to the stored file (screenshot / document)
+  mimeType?: string; // stored file mime (drives image-vs-document rendering)
+  previewImageUrl?: string; // link OG image
   previewTitle?: string; // link preview heading
   previewSubtitle?: string; // link preview subtitle
   createdAt: string;

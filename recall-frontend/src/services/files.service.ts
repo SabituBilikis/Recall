@@ -67,3 +67,23 @@ export async function getSignedUrl(storagePath: string, expiresInSeconds = 3600)
   }
   return data.signedUrl;
 }
+
+export type ItemFile = { url: string; mimeType: string | null; fileName: string };
+
+// Resolves the stored file for an item into a viewable signed URL (item-files is
+// private). Returns null when the item has no file row. RLS owner-scopes `files`.
+export async function getItemFile(itemId: string): Promise<ItemFile | null> {
+  const { data, error } = await supabase
+    .from("files")
+    .select("storage_path,mime_type,file_name")
+    .eq("saved_item_id", itemId)
+    .maybeSingle();
+  if (error) {
+    throw error;
+  }
+  if (!data) {
+    return null;
+  }
+  const url = await getSignedUrl(data.storage_path);
+  return { url, mimeType: data.mime_type, fileName: data.file_name };
+}
