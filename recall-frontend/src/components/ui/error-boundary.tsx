@@ -2,6 +2,7 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 import { YStack } from "tamagui";
 
 import { StateMessage } from "@/components/ui/state-message";
+import { reportError as reportToSentry } from "@/lib/monitoring/sentry";
 
 type ErrorBoundaryProps = {
   children: ReactNode;
@@ -50,8 +51,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 }
 
 function reportError(error: Error, info: ErrorInfo): void {
-  // TODO(crash-reporting): forward to Sentry/Crashlytics once integrated.
   if (__DEV__) {
     console.error("[ErrorBoundary]", error, info.componentStack);
+    return;
   }
+  reportToSentry(error, { componentStack: info.componentStack });
 }

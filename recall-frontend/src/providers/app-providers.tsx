@@ -18,6 +18,7 @@ import { TamaguiProvider, Theme } from "tamagui";
 
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { USE_BACKEND } from "@/lib/config/backend-flag";
+import { initMonitoring } from "@/lib/monitoring/sentry";
 import { getSession, handleAuthDeepLink, isAuthDeepLink, onAuthStateChange } from "@/services/auth.service";
 import { queryClient } from "@/services/query/query-client";
 import { registerQueryOnlineManager } from "@/services/network/register-online-manager";
@@ -32,6 +33,7 @@ import { useSyncStore } from "@/store/use-sync-store";
 import { tamaguiConfig } from "@/theme";
 
 void SplashScreen.preventAutoHideAsync();
+initMonitoring();
 
 // Surfaces a backend env misconfiguration during render (not at import time), so
 // the root ErrorBoundary shows a graceful screen instead of an uncatchable native

@@ -57,6 +57,13 @@
             "useLegacyPackaging": true
           }
         }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "ashanee-designs",
+          "project": "recall"
+        }
       ]
     ],
     "extra": {
