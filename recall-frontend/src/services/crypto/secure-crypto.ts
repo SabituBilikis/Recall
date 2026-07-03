@@ -28,6 +28,11 @@ async function getKey(): Promise<number[]> {
       await SecureStore.setItemAsync(KEY_NAME, bytes.join(","));
       return bytes;
     })();
+    // Don't cache a rejection: a transient keystore failure at cold start must not
+    // brick encryption for the whole session — the next call retries fresh.
+    keyPromise.catch(() => {
+      keyPromise = null;
+    });
   }
   return keyPromise;
 }

@@ -57,4 +57,16 @@ describe("secure-crypto", () => {
     const secureStore = require("expo-secure-store");
     expect(secureStore.setItemAsync).toHaveBeenCalledTimes(1);
   });
+
+  it("recovers after a transient keystore failure (rejection not cached)", async () => {
+    // Fresh module registry → fresh keyPromise and fresh mocks for this case.
+    jest.resetModules();
+    const secureStore = require("expo-secure-store");
+    secureStore.getItemAsync.mockRejectedValueOnce(new Error("keystore busy"));
+    const isolated = require("./secure-crypto") as typeof import("./secure-crypto");
+    await expect(isolated.encryptString("x")).rejects.toThrow("keystore busy");
+    // Next call must retry the keystore (not replay a cached rejection).
+    const cipher = await isolated.encryptString("x");
+    expect(await isolated.decryptString(cipher)).toBe("x");
+  });
 });

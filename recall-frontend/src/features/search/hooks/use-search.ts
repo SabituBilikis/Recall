@@ -10,6 +10,9 @@ import { allSearchItems } from "../mock/all-items";
 
 const SEARCH_DEBOUNCE_MS = 140;
 const RESULT_DEBOUNCE_MS = 160;
+// Analytics settle window: only report a search after the user stops refining it,
+// so typing "recipes" is one search_used event, not one per keystroke.
+const TRACK_SETTLE_MS = 2000;
 
 // Search state + logic. Mock (flag off): synchronous util over the local corpus.
 // Backend (flag on): debounced RPC. `recentSearches` is future-ready.
@@ -18,11 +21,15 @@ export function useSearch() {
   const [isSearching, setIsSearching] = useState(false);
   const [backendResults, setBackendResults] = useState<SavedItem[]>([]);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const trackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+      }
+      if (trackTimerRef.current) {
+        clearTimeout(trackTimerRef.current);
       }
     };
   }, []);
@@ -64,7 +71,14 @@ export function useSearch() {
         .then((rows) => {
           if (active) {
             setBackendResults(rows);
-            track("search_used", { queryLength: query.length, resultCount: rows.length });
+            // Each newer query cancels the pending report — only the query the
+            // user actually settled on is counted.
+            if (trackTimerRef.current) {
+              clearTimeout(trackTimerRef.current);
+            }
+            trackTimerRef.current = setTimeout(() => {
+              track("search_used", { queryLength: query.length, resultCount: rows.length });
+            }, TRACK_SETTLE_MS);
           }
         })
         .catch((error: unknown) => console.warn("[search] failed", error));
